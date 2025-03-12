@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Compras.MVVM.ViewModels"
+             xmlns:convs="clr-namespace:Compras.Converters"
+             xmlns:models="clr-namespace:Compras.MVVM.Models"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             BackgroundColor="{StaticResource Tertiary}"
+             x:Class="Compras.MVVM.Views.CreateListPage"
+             x:Name="Page">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <convs:BoolToExpandIconConverter x:Key="BoolToExpandIconConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid>
+        <!--LISTA DOS GRUPOS DE ITENS-->
+        <CollectionView ItemsSource="{Binding ItemGroups}" 
+                        VerticalScrollBarVisibility="Never" CanReorderItems="True"
+                        HorizontalScrollBarVisibility="Never"  VerticalOptions="Start">
+
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical" ItemSpacing="16"/>
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:ItemGroup">
+                    <VerticalStackLayout Spacing="0">
+                        <!-- HEADER DO GRUPO COM TAP GESTURE -->
+                        <Grid ColumnDefinitions="*, auto" BackgroundColor="{StaticResource Primary}"
+                          Padding="8">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer
+                        Command="{Binding Source={x:Reference Page}, Path=BindingContext.ToggleGroupCommand}"
+                        CommandParameter="{Binding .}" />
+                            </Grid.GestureRecognizers>
+
+                            <Label Grid.Column="0" Text="{Binding CategoryName}"
+                               FontSize="Header" TextTransform="Uppercase"/>
+
+                            <Label Grid.Column="1" Text="{Binding IsExpanded, Converter={StaticResource BoolToExpandIconConverter}}"
+                               FontSize="Header"/>
+                        </Grid>
+
+                        <!-- ITENS DO GRUPO -->
+                        <Border BackgroundColor="{StaticResource Secondary}" StrokeThickness="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="0,0,16,16"/>
+                            </Border.StrokeShape>
+                            <CollectionView ItemsSource="{Binding VisibleItems}">
+                                <CollectionView.ItemsLayout>
+                                    <GridItemsLayout Orientation="Vertical" Span="2"/>
+                                </CollectionView.ItemsLayout>
+                                <CollectionView.ItemTemplate>
+
+                                    <DataTemplate x:DataType="models:Item">
+                                        <Grid x:Name="ItemGrid" ColumnDefinitions="*" RowDefinitions="*">
+                                            <Grid.Behaviors>
+                                                <toolkit:EventToCommandBehavior
+                                                 EventName="SizeChanged"
+                                                 Command="{Binding Source={x:Reference Page}, Path=BindingContext.AdjustItemSizeCommand}"
+                                                 CommandParameter="{x:Reference ItemGrid}" />
+                                            </Grid.Behaviors>
+
+                                            <Grid Grid.Column="0" Grid.Row="0" Margin="8"
+                                              RowDefinitions=".8*, .2*" ColumnDefinitions="*">
+                                                <Button BackgroundColor="{StaticResource Primary}"
+                                                    CornerRadius="16"
+                                                    Command="{Binding Source={x:Reference Page}, Path=BindingContext.ItemClickedCommand}"
+                                                    CommandParameter="{Binding .}"
+                                                    Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" />
+
+                                                <Image Source="{Binding Icon}"
+                                                   Aspect="AspectFit" Margin="8"
+                                                   Grid.Row="0" Grid.Column="0" />
+                                                <Label Text="{Binding Name}"
+                                                   TextTransform="Uppercase"
+                                                   HorizontalOptions="Center"
+                                                   HorizontalTextAlignment="Center"
+                                                   Margin="8"
+                                                   Grid.Row="1" Grid.Column="0" />
+                                            </Grid>
+                                        </Grid>
+                                    </DataTemplate>
+
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </Border>
+
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+            <CollectionView.Footer>
+                <BoxView x:Name="cv_ItemsGroupsFooter" BackgroundColor="Transparent" MaximumHeightRequest="200" MinimumHeightRequest="10"/>
+            </CollectionView.Footer>
+        </CollectionView>
+
+        <Border BackgroundColor="{StaticResource Secondary}" StrokeThickness="0" VerticalOptions="End">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="16, 16, 0, 0"/>
+            </Border.StrokeShape>
+            <Grid RowDefinitions="auto, *">
+                <Border Grid.Row="0" BackgroundColor="{StaticResource Primary}" StrokeThickness="0">
+                    <Grid ColumnDefinitions="*, auto, *" SizeChanged="bottonButtons_SizeChanged">
+                        <ImageButton Source="share.png" Aspect="AspectFit" BackgroundColor="Transparent" HeightRequest="0"
+                                Grid.Column="0" Command="{Binding ShareClickedCommand}" Padding="12"/>
+                        <DatePicker Grid.Column="1" HorizontalOptions="Center" Format="dd/MM" FontSize="17"/>
+                        <Button Text="&#x2630;" BackgroundColor="Transparent" 
+                                Grid.Column="2" Command="{Binding ToggleItemsListPanelCommand}" CommandParameter="{x:Reference vs_BottonMenu}" 
+                                FontAttributes="Bold" FontSize="17"/>
+                    </Grid>
+                </Border>
+                <CollectionView x:Name="vs_BottonMenu" MinimumHeightRequest="0" 
+                                HeightRequest="0" Grid.Row="1" ItemsSource="{Binding ItemsList}"
+                                VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical" VerticalItemSpacing="8" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <SwipeView>
+                                <SwipeView.RightItems>
+                                    <SwipeItems Mode="Reveal">
+                                        <SwipeItemView>
+                                            <Grid WidthRequest="30">
+                                                <ImageButton Source="trash.svg" Aspect="AspectFit"
+                                             Command="{Binding Source={x:Reference Page}, Path=BindingContext.DeleteListItemCommand}" 
+                                             CommandParameter="{Binding .}"/>
+                                            </Grid>
+                                        </SwipeItemView>
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+                                <Border Padding="16" BackgroundColor="{StaticResource Primary}">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={x:Reference Page}, Path=BindingContext.EditItemFromListCommand}" CommandParameter="{Binding .}"/>
+                                    </Border.GestureRecognizers>
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="16"/>
+                                    </Border.StrokeShape>
+                                    <Grid ColumnDefinitions="auto, *, auto">
+                                        <Label Grid.Column="0">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="• " />
+                                                    <Span Text="{Binding Name}" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                        <Label Text="{Binding Amount}" Grid.Column="1" HorizontalOptions="End" Padding="0,0,8,0"/>
+                                        <Label Text="{Binding Unit}" Grid.Column="2" HorizontalOptions="Center"/>
+                                    </Grid>
+                                </Border>
+                            </SwipeView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>

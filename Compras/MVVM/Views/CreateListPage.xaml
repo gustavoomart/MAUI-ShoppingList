@@ -4,6 +4,7 @@
              xmlns:vm="clr-namespace:Compras.MVVM.ViewModels"
              xmlns:convs="clr-namespace:Compras.Converters"
              xmlns:models="clr-namespace:Compras.MVVM.Models"
+             x:DataType="vm:CreateListViewModel"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              BackgroundColor="{StaticResource Tertiary}"
              x:Class="Compras.MVVM.Views.CreateListPage"
@@ -28,19 +29,18 @@
                 <DataTemplate x:DataType="models:ItemGroup">
                     <VerticalStackLayout Spacing="0">
                         <!-- HEADER DO GRUPO COM TAP GESTURE -->
-                        <Grid ColumnDefinitions="*, auto" BackgroundColor="{StaticResource Primary}"
+                        <Grid ColumnDefinitions=".1*, .8*, .1*" BackgroundColor="{StaticResource Primary}"
                           Padding="8">
                             <Grid.GestureRecognizers>
-                                <TapGestureRecognizer
-                        Command="{Binding Source={x:Reference Page}, Path=BindingContext.ToggleGroupCommand}"
-                        CommandParameter="{Binding .}" />
+                                <TapGestureRecognizer Command="{Binding Source={x:Reference Page}, Path=BindingContext.ToggleGroupCommand}"
+                                                      CommandParameter="{Binding .}" />
                             </Grid.GestureRecognizers>
 
-                            <Label Grid.Column="0" Text="{Binding CategoryName}"
-                               FontSize="Header" TextTransform="Uppercase"/>
+                            <Label Grid.Column="1" Text="{Binding CategoryName}"
+                               FontSize="22" TextTransform="Uppercase" HorizontalOptions="Center" FontAttributes="Bold"/>
 
-                            <Label Grid.Column="1" Text="{Binding IsExpanded, Converter={StaticResource BoolToExpandIconConverter}}"
-                               FontSize="Header"/>
+                            <Label Grid.Column="2" Text="{Binding IsExpanded, Converter={StaticResource BoolToExpandIconConverter}}"
+                               FontSize="Header" HorizontalOptions="End"/>
                         </Grid>
 
                         <!-- ITENS DO GRUPO -->
@@ -76,6 +76,8 @@
                                                    Grid.Row="0" Grid.Column="0" />
                                                 <Label Text="{Binding Name}"
                                                    TextTransform="Uppercase"
+                                                       FontSize="16"
+                                                       FontAttributes="Bold"
                                                    HorizontalOptions="Center"
                                                    HorizontalTextAlignment="Center"
                                                    Margin="8"
@@ -101,11 +103,11 @@
                 <RoundRectangle CornerRadius="16, 16, 0, 0"/>
             </Border.StrokeShape>
             <Grid RowDefinitions="auto, *">
-                <Border Grid.Row="0" BackgroundColor="{StaticResource Primary}" StrokeThickness="0">
+                <Border Grid.Row="0" BackgroundColor="#ff0000" StrokeThickness="0">
                     <Grid ColumnDefinitions="*, auto, *" SizeChanged="bottonButtons_SizeChanged">
                         <ImageButton Source="share.png" Aspect="AspectFit" BackgroundColor="Transparent" HeightRequest="0"
                                 Grid.Column="0" Command="{Binding ShareClickedCommand}" Padding="12"/>
-                        <DatePicker Grid.Column="1" HorizontalOptions="Center" Format="dd/MM" FontSize="17"/>
+                        <DatePicker Grid.Column="1" HorizontalOptions="Center" Format="dd/MM" FontSize="20"/>
                         <Button Text="&#x2630;" BackgroundColor="Transparent" 
                                 Grid.Column="2" Command="{Binding ToggleItemsListPanelCommand}" CommandParameter="{x:Reference vs_BottonMenu}" 
                                 FontAttributes="Bold" FontSize="17"/>
@@ -113,12 +115,9 @@
                 </Border>
                 <CollectionView x:Name="vs_BottonMenu" MinimumHeightRequest="0" 
                                 HeightRequest="0" Grid.Row="1" ItemsSource="{Binding ItemsList}"
-                                VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
-                    <CollectionView.ItemsLayout>
-                        <GridItemsLayout Orientation="Vertical" VerticalItemSpacing="8" />
-                    </CollectionView.ItemsLayout>
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
+                                VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" >
+                    <CollectionView.ItemTemplate >
+                        <DataTemplate x:DataType="models:Item">
                             <SwipeView>
                                 <SwipeView.RightItems>
                                     <SwipeItems Mode="Reveal">
@@ -131,26 +130,41 @@
                                         </SwipeItemView>
                                     </SwipeItems>
                                 </SwipeView.RightItems>
-                                <Border Padding="16" BackgroundColor="{StaticResource Primary}">
-                                    <Border.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Source={x:Reference Page}, Path=BindingContext.EditItemFromListCommand}" CommandParameter="{Binding .}"/>
-                                    </Border.GestureRecognizers>
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="16"/>
-                                    </Border.StrokeShape>
-                                    <Grid ColumnDefinitions="auto, *, auto">
-                                        <Label Grid.Column="0">
-                                            <Label.FormattedText>
-                                                <FormattedString>
-                                                    <Span Text="• " />
-                                                    <Span Text="{Binding Name}" />
-                                                </FormattedString>
-                                            </Label.FormattedText>
-                                        </Label>
-                                        <Label Text="{Binding Amount}" Grid.Column="1" HorizontalOptions="End" Padding="0,0,8,0"/>
-                                        <Label Text="{Binding Unit}" Grid.Column="2" HorizontalOptions="Center"/>
-                                    </Grid>
-                                </Border>
+                                <VerticalStackLayout>
+                                    <Border Margin="16,8,16,0" BackgroundColor="Transparent" StrokeThickness="0">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={x:Reference Page}, Path=BindingContext.EditItemFromListCommand}" CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
+
+                                        <Grid ColumnDefinitions="auto, *, auto">
+                                            <Label Grid.Column="0" FontSize="18">
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span Text="• " />
+                                                        <Span Text="{Binding Name}" />
+                                                        <Span Text="  " />
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                            <Label VerticalTextAlignment="Center" Grid.Column="1" Text="{Binding DescriptionFormatted}" />
+
+                                            <Label Grid.Column="2" FontSize="18">
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span Text="  "/>
+                                                        <Span Text="{Binding Amount}"/>
+                                                        <Span Text=" "/>
+                                                        <Span Text="{Binding Unit}"/>
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                        </Grid>
+                                    </Border>
+                                    <BoxView Color="White"    
+                                             Margin="8,4,8,0"
+                                             HeightRequest="1"  
+                                             HorizontalOptions="Fill" />
+                                </VerticalStackLayout>
                             </SwipeView>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

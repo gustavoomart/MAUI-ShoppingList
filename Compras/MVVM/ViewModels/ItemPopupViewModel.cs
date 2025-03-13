@@ -24,7 +24,8 @@ public partial class ItemPopupViewModel : ObservableObject
         }
     }
     private float _amount;
-
+    public string Description { get => _description; set => SetProperty(ref _description, value); }
+    private string _description = string.Empty;
     public ItemsInfos.UnitTypes SelectedUnit {
         get => _selectedUnit;
         set => SetProperty(ref _selectedUnit, value);
@@ -43,6 +44,7 @@ public partial class ItemPopupViewModel : ObservableObject
         _popup = popup;
         _amount = item.Amount;
         _selectedUnit = item.Unit;
+        _description = item.Description;
     }
 
     [RelayCommand]
@@ -52,7 +54,8 @@ public partial class ItemPopupViewModel : ObservableObject
             _amount,
             _item.Icon,
             SelectedUnit,
-            _item.Category
+            _item.Category,
+            Description
         );
         await _popup.CloseAsync(item);
     }

@@ -60,6 +60,7 @@ public partial class CreateListViewModel : ObservableObject {
             if (itemToEdit != null) {
                 itemToEdit.Amount = newItem.Amount;
                 itemToEdit.Unit = newItem.Unit;
+                itemToEdit.Description = newItem.Description;
             }
 
         }
@@ -67,13 +68,23 @@ public partial class CreateListViewModel : ObservableObject {
     [RelayCommand] private async Task ShareClicked() {
         string formattedDate = Date.ToString("dd/MM");
 
-        var lines = ItemsList.Select(item => $"• {item.Name} ({item.Description}) - {item.Amount} {item.Unit}");
+        var lines = ItemsList.Select(item =>
+        {
+            var descriptionPart = !string.IsNullOrWhiteSpace(item.Description)
+                ? $" ({item.Description})"
+                : string.Empty;
+
+            return $"• {item.Name}{descriptionPart} - {item.Amount} {item.Unit}";
+        });
+
         var text = $"{formattedDate}\n\n{string.Join(Environment.NewLine, lines)}";
+
         await Share.Default.RequestAsync(new ShareTextRequest {
             Title = "Minha lista de compras",
             Text = text
         });
     }
+
     [RelayCommand] private void DeleteListItem(Item? item) {
         if (item == null) return;
         ItemsList.Remove(item);

@@ -15,30 +15,29 @@
             <Border.StrokeShape>
                 <RoundRectangle CornerRadius="32,0,0,32"/>
             </Border.StrokeShape>
-            <VerticalStackLayout Spacing="8">
-                <Label Text="{Binding Name}" TextTransform="Uppercase"
-                   FontSize="Large"
-                   VerticalTextAlignment="Center"
-                   HorizontalTextAlignment="Center"
-                   VerticalOptions="Center"
-                   HorizontalOptions="Center"/>
-                <Grid ColumnDefinitions="*">
-                    <HorizontalStackLayout Grid.Column="0" HorizontalOptions="Center">
-                        <Entry Text="{Binding Amount}"  Placeholder="Quantidade"
-                               HeightRequest="60" WidthRequest="150" Focused="Entry_Focused"
+            <Grid RowDefinitions="auto, auto, auto, auto" Margin="8">
+                <Label Grid.Row="0"
+                       Text="{Binding Name}" TextTransform="Uppercase"
+                       FontSize="Large"
+                       VerticalTextAlignment="Center"
+                       HorizontalTextAlignment="Center"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"/>
+                <Grid Grid.Row="1" ColumnDefinitions="*, auto">
+                    <Entry Grid.Column="0" Text="{Binding Amount}"  Placeholder="Quantidade"
+                               HeightRequest="60"  Focused="Entry_Focused"
                                HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Keyboard="Numeric"/>
-                        <Picker ItemsSource="{Binding UnitTypes}"
+                    <Picker Grid.Column="1" ItemsSource="{Binding UnitTypes}"
                                 SelectedItem="{Binding SelectedUnit}"
                                 HeightRequest="60"
                                 HorizontalTextAlignment="Center"
                                 VerticalTextAlignment="Center" />
-                    </HorizontalStackLayout>
 
                 </Grid>
-                <Editor Text="{Binding Description}" Placeholder="Anotações" HorizontalTextAlignment="Center" IsSpellCheckEnabled="True"
+                <Editor Grid.Row="2" Text="{Binding Description}" Placeholder="Anotações" HorizontalTextAlignment="Center" IsSpellCheckEnabled="True"
                         AutoSize="TextChanges"/>
-                <Button Text="ADICIONAR" FontAttributes="Bold" TextColor="White" Command="{Binding AddItemCommand}"/>
-            </VerticalStackLayout>
+                <Button Grid.Row="3" Text="ADICIONAR" FontAttributes="Bold" TextColor="White" Command="{Binding AddItemCommand}"/>
+            </Grid>
         </Border>
     </Border>
 

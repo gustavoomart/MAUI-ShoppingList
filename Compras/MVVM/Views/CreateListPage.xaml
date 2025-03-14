@@ -13,6 +13,7 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <convs:BoolToExpandIconConverter x:Key="BoolToExpandIconConverter" />
+            <convs:DescriptionFormatterConverter x:Key="DescriptionFormatterConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -75,13 +76,14 @@
                                                    Aspect="AspectFit" Margin="8"
                                                    Grid.Row="0" Grid.Column="0" />
                                                 <Label Text="{Binding Name}"
-                                                   TextTransform="Uppercase"
-                                                       FontSize="16"
+                                                       TextTransform="Uppercase"
+                                                       LineBreakMode="TailTruncation"
+
                                                        FontAttributes="Bold"
-                                                   HorizontalOptions="Center"
-                                                   HorizontalTextAlignment="Center"
-                                                   Margin="8"
-                                                   Grid.Row="1" Grid.Column="0" />
+                                                       HorizontalOptions="Center"
+                                                       HorizontalTextAlignment="Center"
+                                                       Margin="8"
+                                                       Grid.Row="1" Grid.Column="0" />
                                             </Grid>
                                         </Grid>
                                     </DataTemplate>
@@ -146,7 +148,7 @@
                                                     </FormattedString>
                                                 </Label.FormattedText>
                                             </Label>
-                                            <Label VerticalTextAlignment="Center" Grid.Column="1" Text="{Binding DescriptionFormatted}" />
+                                            <Label VerticalTextAlignment="Center" Grid.Column="1" Text="{Binding Description, Converter={StaticResource DescriptionFormatterConverter}}" />
 
                                             <Label Grid.Column="2" FontSize="18">
                                                 <Label.FormattedText>

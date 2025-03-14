@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Compras.MVVM.Models;
 
 namespace Compras.MVVM.Models;
 public partial class Item : ObservableObject {
@@ -19,8 +18,6 @@ public partial class Item : ObservableObject {
 
     public float Amount { get => _amount; set => SetProperty(ref _amount, value); }
     private float _amount;
-    public string DescriptionFormatted => string.IsNullOrWhiteSpace(Description) ? string.Empty : $"({Description})";
-
     public string Description { get => _description; set => SetProperty(ref _description, value); }
     private string _description = string.Empty;
     public ItemsInfos.UnitTypes Unit { get => _unit; set => SetProperty(ref _unit, value); }

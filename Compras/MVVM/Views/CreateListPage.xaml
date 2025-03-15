@@ -116,10 +116,10 @@
                     </Grid>
                 </Border>
                 <CollectionView x:Name="vs_BottonMenu" MinimumHeightRequest="0" 
-                                HeightRequest="0" Grid.Row="1" ItemsSource="{Binding ItemsList}"
+                                HeightRequest="0" Grid.Row="1" ItemsSource="{Binding SelectedItems}"
                                 VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" >
                     <CollectionView.ItemTemplate >
-                        <DataTemplate x:DataType="models:Item">
+                        <DataTemplate x:DataType="models:SelectedItem">
                             <SwipeView>
                                 <SwipeView.RightItems>
                                     <SwipeItems Mode="Reveal">
@@ -156,7 +156,7 @@
                                                         <Span Text="  "/>
                                                         <Span Text="{Binding Amount}"/>
                                                         <Span Text=" "/>
-                                                        <Span Text="{Binding Unit}"/>
+                                                        <Span Text="{Binding Unit.Name}"/>
                                                     </FormattedString>
                                                 </Label.FormattedText>
                                             </Label>
@@ -166,6 +166,7 @@
                                              Margin="8,4,8,0"
                                              HeightRequest="1"  
                                              HorizontalOptions="Fill" />
+
                                 </VerticalStackLayout>
                             </SwipeView>
                         </DataTemplate>

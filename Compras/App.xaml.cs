@@ -1,10 +1,19 @@
-﻿namespace Compras
+﻿using Compras.Services;
+
+namespace Compras
 {
     public partial class App : Application
     {
-        public App()
+        public App(IServiceProvider services)
         {
             InitializeComponent();
+            Task.Run(async () =>
+            {
+                var db = services.GetService<Database>();
+                if (db != null) {
+                    await db.InitializeAsync();
+                }
+            });
         }
 
         protected override Window CreateWindow(IActivationState? activationState)

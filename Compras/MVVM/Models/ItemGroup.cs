@@ -1,26 +1,25 @@
-﻿using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
-using Compras.MVVM.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using SQLite;
+using System.Collections.ObjectModel;
 
 namespace Compras.MVVM.Models;
 
 public partial class ItemGroup : ObservableObject {
-    public string CategoryName { get; }
-    private ObservableCollection<Item> _allItems;
+    [PrimaryKey]
+    public string CategoryName { get => _categoryName; set => SetProperty(ref _categoryName, value); }
+    public string _categoryName = string.Empty;
+    public ObservableCollection<Item> AllCategoryItems = new();
 
-    [ObservableProperty]
+    public bool IsExpanded {
+        get => isExpanded;
+        set {
+            OnPropertyChanged(nameof(VisibleItems));
+            SetProperty(ref isExpanded, value);
+        }
+    }
     private bool isExpanded = true;
 
     public ObservableCollection<Item> VisibleItems => IsExpanded
-        ? _allItems
+        ? AllCategoryItems
         : new ObservableCollection<Item>();
-
-    public ItemGroup(string categoryName, IEnumerable<Item> items) {
-        CategoryName = categoryName;
-        _allItems = new ObservableCollection<Item>(items);
-    }
-
-    partial void OnIsExpandedChanged(bool value) {
-        OnPropertyChanged(nameof(VisibleItems));
-    }
 }

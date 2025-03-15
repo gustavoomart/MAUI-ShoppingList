@@ -1,5 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using CommunityToolkit.Maui;
+using Compras.Services;
+using Compras.MVVM.Views;
+using Compras.MVVM.ViewModels;
 namespace Compras;
 
 public static class MauiProgram
@@ -19,7 +22,10 @@ public static class MauiProgram
 #if DEBUG
 		builder.Logging.AddDebug();
 #endif
+		builder.Services.AddSingleton<Database>();
 
-		return builder.Build();
+        builder.Services.AddTransient<CreateListViewModel>();
+        builder.Services.AddTransient<CreateListPage>();
+        return builder.Build();
 	}
 }

@@ -4,13 +4,11 @@ using System.Text.Json;
 
 namespace Compras.MVVM.Models;
 
-public partial class Item : ObservableObject {
+public partial class SelectedItem : ObservableObject {
     [PrimaryKey, AutoIncrement]
     public int Id { get; set; }
 
     public string Name { get; set; } = string.Empty;
-    public string Icon { get; set; } = "no_picture_icon.png";
-    public string Category { get; set; } = string.Empty;
 
     public float Amount {
         get => _amount;
@@ -46,16 +44,4 @@ public partial class Item : ObservableObject {
         }
     }
 
-
-
-    public static Item CreateItem(string name, float amount, string icon, Unit unit, string category, string? description = null) {
-        return new Item {
-            Name = name,
-            Amount = amount,
-            Icon = icon,
-            Unit = unit,
-            Category = category,
-            Description = description ?? string.Empty
-        };
-    }
 }

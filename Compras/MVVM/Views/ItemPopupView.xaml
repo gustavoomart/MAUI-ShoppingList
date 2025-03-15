@@ -28,10 +28,11 @@
                                HeightRequest="60"  Focused="Entry_Focused"
                                HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Keyboard="Numeric"/>
                     <Picker Grid.Column="1" ItemsSource="{Binding UnitTypes}"
-                                SelectedItem="{Binding SelectedUnit}"
-                                HeightRequest="60"
-                                HorizontalTextAlignment="Center"
-                                VerticalTextAlignment="Center" />
+                            SelectedItem="{Binding SelectedUnit}"
+                            ItemDisplayBinding="{Binding Name}"
+                            HeightRequest="60"
+                            HorizontalTextAlignment="Center"
+                            VerticalTextAlignment="Center" />
 
                 </Grid>
                 <Editor Grid.Row="2" Text="{Binding Description}" Placeholder="Anotações" HorizontalTextAlignment="Center" IsSpellCheckEnabled="True"
